@@ -44,7 +44,12 @@ class MainHandler(webapp.RequestHandler):
             MainView.render(self, 200, None, format)
             return
         
-        href = self.request.get('href').strip().encode('utf-8')
+        base = self.request.get('href')
+        params = self.request.arguments()
+        for p in params:
+            if (p != 'href') and (p != 'title'):
+                base += '&'+str(p).strip()+'='+self.request.get(p).strip()
+        href = base.strip().encode('utf-8')
         title = self.request.get('title').strip().encode('utf-8')
         if (code == 'new') and (href is not None):
             try:
